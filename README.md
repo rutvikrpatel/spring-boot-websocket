@@ -1,5 +1,5 @@
 # Spring Boot - Location based web socket application
-###spring-boot-websocket
+### spring-boot-websocket
 
 > In this appliction you will know how to create Location based web socket application with Spring Boot in simplest way.
 
