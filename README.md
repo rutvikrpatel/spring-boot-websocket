@@ -55,7 +55,7 @@ Bellow I have described screenshot of the application,
 ### 5)	After clicking on Live button on page in both the user’s screen, All connected user’s latest location is getting feed from server via web socket and current user continuously sending their location to web server from web page.
 ![](document/5.PNG)
 
-### 6)	In this process, User have to allow access of location from browser to get their location
+### 6)	At starting point, User have to allow access of location from browser to get their location
 ![](document/6.PNG)
 
 ### 7)	Project structure of the project
