@@ -1,5 +1,5 @@
 # Spring Boot - Location based web socket application
-spring-boot-websocket
+###spring-boot-websocket
 
 > In this appliction you will know how to create Location based web socket application with Spring Boot in simplest way.
 
@@ -15,7 +15,7 @@ spring-boot-websocket
 
 
 
-### Project Description
+# Project Description
 
 ## Definition: 
 -	Create Web Socket Endpoint that is receiving location from users.
@@ -27,7 +27,7 @@ spring-boot-websocket
 
 ## Solution: 
 
-# Technology used: 
+### Technology used: 
 Server Side = 	Spring Boot for web application
                 Spring Web Socket for managing socket communication from server side
 
@@ -39,6 +39,27 @@ Client Side = 	Html5 Geolocation from browser for getting user’s live actual l
 > In this project I haven’t used any database for storing the data. I have stored data in memory.
 
 Bellow I have described screenshot of the application,
+
+### 1)	Firstly, when user enter in the application then, He/She have to provide username.
+![](document/1.PNG)
+
+### 2)	If user has entered username as UserA. Then, web page shows that user’s current location. In that time no other user is online so, public user’s data is blank.
+![](document/2.PNG)
+
+### 3)	In that time if other username called UserB is enters.
+![](document/3.PNG)
+
+### 4)	UserB is show his/her current location on page
+![](document/4.PNG)
+
+### 5)	After clicking on Live button on page in both the user’s screen, All connected user’s latest location is getting feed from server via web socket and current user continuously sending their location to web server form web page.
+![](document/5.PNG)
+
+### 6)	In this process, User have to allow access of location from browser to get their location
+![](document/6.PNG)
+
+### 7)	Project structure of the project
+![](document/9.PNG)
 
 
 # That's It...you are ready to Run
