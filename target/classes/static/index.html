@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+      <title>Location Based WebSocket Application - Spring Boot</title>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+      
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+  </head>
+  <body>
+    <noscript>
+      <h2>Sorry! Your browser doesn't support javascript</h2>
+    </noscript>
+	<script>
+    var stompClient = null;
+    
+	var myLatitude;
+	var myLongitude;
+	var myUserName;
+	
+	function getLocation() {
+	  if (navigator.geolocation) {
+	      navigator.geolocation.getCurrentPosition(showPosition);
+	  } else {
+		  $("#currentUser").html("Geolocation is not supported by this browser.");
+	  }
+	}
+	function showPosition(position) {
+		myLatitude = position.coords.latitude+'';
+		myLongitude = position.coords.longitude+'';
+		var currentUserLocation = "<b>My UserName:</b>"+myUserName+"<br /><b>Latitude:</b> "+position.coords.latitude+"<br /><b>Longitude:</b> "+position.coords.longitude;
+		console.log('currentUserLocation : '+currentUserLocation);
+		$("#currentUser").html(currentUserLocation);
+	}
+	function getLocationBean() {
+		return JSON.stringify({user:myUserName, latitude:myLatitude, longitude:myLongitude, time:'no'});
+	}
+	
+	var isConntectedFlag = false;
+	$(document).ready(function(){
+		var person = prompt("Please enter your name", "RutvikPatel");
+		if (person != null) {
+			myUserName = person;
+		}else{
+			myUserName = "Anonymous";
+		}
+		getLocation();
+		
+		setInterval(function(){
+			getLocation();
+			
+			if(isConntectedFlag){
+				whenConnected();
+			}
+		} , 5000);
+		
+		$("#setLocation").click(function(){
+			connectMe();
+		});
+	});
+	
+	function connectMe() {
+		var socket = new SockJS('/ws');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, whenConnected, whenError);
+        
+        isConntectedFlag = true;
+	}
+	function whenConnected() {
+		console.log('sending and receiving data');
+        
+		// Subscribe to the Public
+        stompClient.subscribe('/app/getData', whenMessageReceived);
+        
+        // Tell your location to the server
+        stompClient.send( "/app/saveLocation", {}, getLocationBean() );
+    }
+    function whenError(error) {
+        alert('Could not connect to WebSocket server. Please refresh this page to try again!');
+    }
+    function whenMessageReceived(payload) {
+        var message = JSON.parse(payload.body);
+        console.log(message);
+        
+        var result = '';
+        $.each(message, function( index, obj ) {
+        	console.log(obj.user);
+        	result += '<b>User:</b>'+obj.user+' <b>Latitude:</b>'+obj.latitude+' <b>Longitude:</b>'+obj.longitude+'<br />';
+        });
+        $('#otherUser').html(result);
+    }
+	</script>
+	
+	<div class="container">
+		<h2>Location Based Web Socket Application - Spring Boot</h2>
+		<button id="setLocation" type="button" class="btn btn-default">Live</button><br />
+		
+		<div class="container col-sm-4">
+			<div><h4>Current User's Data</h4></div>
+			<div id="currentUser"></div>
+		</div>
+		<div class="container col-sm-8">
+			<div><h4>Public User's Data</h4></div>
+			<div id="otherUser"></div>
+		</div>
+	</div>
+  </body>
+</html>
